@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-memory-fabric.dev/schemas/get-recent-project-context.request.schema.json",
+  "title": "GetRecentProjectContextRequest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["tenant", "project", "repository", "scope"],
+  "properties": {
+    "tenant": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "project": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "repository": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "scope": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["user", "repo", "project", "team", "org"]
+      },
+      "minItems": 1,
+      "maxItems": 5,
+      "uniqueItems": true
+    },
+    "limit": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 50,
+      "default": 10
+    }
+  }
+}

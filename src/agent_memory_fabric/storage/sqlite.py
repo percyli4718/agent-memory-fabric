@@ -5,6 +5,11 @@ import sqlite3
 from pathlib import Path
 
 from agent_memory_fabric.models import MemoryRecord
+from agent_memory_fabric.policy import (
+    allowed_visibility_for_scopes,
+    enforce_search_policy,
+    enforce_write_policy,
+)
 from agent_memory_fabric.storage.base import MemoryStore
 from agent_memory_fabric.validation import validate_payload
 
@@ -54,6 +59,7 @@ class SQLiteMemoryStore(MemoryStore):
 
     def write_memory(self, payload: dict) -> MemoryRecord:
         validate_payload("write-memory.request.schema.json", payload)
+        enforce_write_policy(payload)
         record = MemoryRecord.create(**payload)
         with self._connect() as conn:
             conn.execute(
@@ -91,10 +97,12 @@ class SQLiteMemoryStore(MemoryStore):
 
     def search_memory(self, payload: dict) -> list[MemoryRecord]:
         validate_payload("search-memory.request.schema.json", payload)
+        enforce_search_policy(payload)
         query = payload["query"]
         limit = payload.get("limit", 10)
         types = payload.get("types") or []
         scopes = payload.get("scope") or []
+        allowed_visibilities = allowed_visibility_for_scopes(scopes)
 
         sql = [
             """
@@ -123,6 +131,81 @@ class SQLiteMemoryStore(MemoryStore):
             placeholders = ", ".join("?" for _ in scopes)
             sql.append(f"AND scope IN ({placeholders})")
             params.extend(scopes)
+
+        if allowed_visibilities:
+            placeholders = ", ".join("?" for _ in allowed_visibilities)
+            sql.append(f"AND visibility IN ({placeholders})")
+            params.extend(allowed_visibilities)
+
+        sql.append("ORDER BY updated_at DESC LIMIT ?")
+        params.append(limit)
+
+        with self._connect() as conn:
+            rows = conn.execute("\n".join(sql), params).fetchall()
+        return [self._row_to_record(row) for row in rows]
+
+    def get_recent_project_context(self, payload: dict) -> list[MemoryRecord]:
+        validate_payload("get-recent-project-context.request.schema.json", payload)
+        enforce_search_policy(payload)
+        return self._list_filtered_records(
+            payload,
+            limit=payload.get("limit", 10),
+        )
+
+    def get_decisions(self, payload: dict) -> list[MemoryRecord]:
+        validate_payload("get-decisions.request.schema.json", payload)
+        enforce_search_policy(payload)
+        return self._list_filtered_records(
+            payload,
+            types=["decision"],
+            limit=payload.get("limit", 10),
+        )
+
+    def get_open_questions(self, payload: dict) -> list[MemoryRecord]:
+        validate_payload("get-open-questions.request.schema.json", payload)
+        enforce_search_policy(payload)
+        return self._list_filtered_records(
+            payload,
+            types=["question", "todo"],
+            limit=payload.get("limit", 10),
+        )
+
+    def _list_filtered_records(
+        self,
+        payload: dict,
+        *,
+        types: list[str] | None = None,
+        limit: int,
+    ) -> list[MemoryRecord]:
+        scopes = payload["scope"]
+        allowed_visibilities = allowed_visibility_for_scopes(scopes)
+        sql = [
+            """
+            SELECT * FROM memory_records
+            WHERE tenant = ?
+              AND project = ?
+              AND repository = ?
+              AND status = 'active'
+            """
+        ]
+        params: list[object] = [
+            payload["tenant"],
+            payload["project"],
+            payload["repository"],
+        ]
+
+        placeholders = ", ".join("?" for _ in scopes)
+        sql.append(f"AND scope IN ({placeholders})")
+        params.extend(scopes)
+
+        visibility_placeholders = ", ".join("?" for _ in allowed_visibilities)
+        sql.append(f"AND visibility IN ({visibility_placeholders})")
+        params.extend(allowed_visibilities)
+
+        if types:
+            type_placeholders = ", ".join("?" for _ in types)
+            sql.append(f"AND type IN ({type_placeholders})")
+            params.extend(types)
 
         sql.append("ORDER BY updated_at DESC LIMIT ?")
         params.append(limit)

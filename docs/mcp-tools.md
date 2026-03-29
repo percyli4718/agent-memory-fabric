@@ -75,15 +75,24 @@ Suggested input:
 Purpose:
 Fetch a compact set of recent memories for the current project or repository.
 
+v0.1 note:
+The current implementation requires explicit scopes and supports `user`, `repo`, and `project`.
+
 ### `get_decisions`
 
 Purpose:
 Return architecture and workflow decisions within a given scope.
 
+v0.1 note:
+This currently returns only `decision` records within explicitly bounded scopes.
+
 ### `get_open_questions`
 
 Purpose:
 Return unresolved questions, risks, and TODO-style memory items.
+
+v0.1 note:
+This currently returns `question` and `todo` records within explicitly bounded scopes.
 
 ### `upsert_fact`
 
@@ -107,3 +116,12 @@ Redact sensitive content while preserving audit metadata and the record lifecycl
 - autonomous background scraping of all repositories
 - broad cross-tenant recall
 - write paths without scope or author metadata
+
+## v0.1 Policy Constraints
+
+- writes support only `user`, `repo`, and `project` scopes
+- `user` scope supports only `private` visibility
+- `repo` scope supports `private` and `team` visibility
+- `project` scope supports only `team` visibility
+- retrieval requires an explicit scope list
+- retrieval currently rejects `team` and `org` scopes until a stronger auth model exists

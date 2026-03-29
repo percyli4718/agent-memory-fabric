@@ -13,3 +13,15 @@ class MemoryStore(ABC):
     @abstractmethod
     def search_memory(self, payload: dict) -> list[MemoryRecord]:
         raise NotImplementedError
+
+    @abstractmethod
+    def get_recent_project_context(self, payload: dict) -> list[MemoryRecord]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_decisions(self, payload: dict) -> list[MemoryRecord]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_open_questions(self, payload: dict) -> list[MemoryRecord]:
+        raise NotImplementedError

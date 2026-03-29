@@ -33,6 +33,26 @@ def build_mcp(db_path: str) -> FastMCP:
         record = store.write_memory(payload)
         return {"memory": record.to_dict()}
 
+    @mcp.tool(
+        description="Get the most recent structured project context within explicit scopes."
+    )
+    def get_recent_project_context(payload: dict[str, Any]) -> dict[str, Any]:
+        _ = load_schema("get-recent-project-context.request.schema.json")
+        results = [record.to_dict() for record in store.get_recent_project_context(payload)]
+        return {"results": results, "count": len(results)}
+
+    @mcp.tool(description="Get recent decision records within explicit scopes.")
+    def get_decisions(payload: dict[str, Any]) -> dict[str, Any]:
+        _ = load_schema("get-decisions.request.schema.json")
+        results = [record.to_dict() for record in store.get_decisions(payload)]
+        return {"results": results, "count": len(results)}
+
+    @mcp.tool(description="Get open questions and TODO-style records within explicit scopes.")
+    def get_open_questions(payload: dict[str, Any]) -> dict[str, Any]:
+        _ = load_schema("get-open-questions.request.schema.json")
+        results = [record.to_dict() for record in store.get_open_questions(payload)]
+        return {"results": results, "count": len(results)}
+
     return mcp
 
 
