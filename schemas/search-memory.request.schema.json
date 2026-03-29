@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-memory-fabric.dev/schemas/search-memory.request.schema.json",
+  "title": "SearchMemoryRequest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["query", "tenant", "project", "repository"],
+  "properties": {
+    "query": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1000
+    },
+    "tenant": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "project": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "repository": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "scope": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["user", "repo", "project", "team", "org"]
+      },
+      "minItems": 1,
+      "maxItems": 5,
+      "uniqueItems": true
+    },
+    "types": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["decision", "bugfix", "incident", "note", "todo", "question", "fact", "convention", "summary"]
+      },
+      "maxItems": 9,
+      "uniqueItems": true
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 64
+      },
+      "maxItems": 20,
+      "uniqueItems": true
+    },
+    "limit": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 50,
+      "default": 10
+    }
+  }
+}

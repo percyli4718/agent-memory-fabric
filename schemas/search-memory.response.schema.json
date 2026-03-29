@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-memory-fabric.dev/schemas/search-memory.response.schema.json",
+  "title": "SearchMemoryResponse",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["results", "count"],
+  "properties": {
+    "results": {
+      "type": "array",
+      "items": {
+        "$ref": "https://agent-memory-fabric.dev/schemas/memory-record.schema.json"
+      }
+    },
+    "count": {
+      "type": "integer",
+      "minimum": 0
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-memory-fabric.dev/schemas/write-memory.response.schema.json",
+  "title": "WriteMemoryResponse",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["memory"],
+  "properties": {
+    "memory": {
+      "$ref": "https://agent-memory-fabric.dev/schemas/memory-record.schema.json"
+    }
+  }
+}

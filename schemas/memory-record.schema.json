@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-memory-fabric.dev/schemas/memory-record.schema.json",
+  "title": "MemoryRecord",
+  "description": "A structured memory record for cross-session agent workflows.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "memory_id",
+    "tenant",
+    "project",
+    "repository",
+    "scope",
+    "visibility",
+    "type",
+    "summary",
+    "author",
+    "source",
+    "status",
+    "created_at",
+    "updated_at",
+    "schema_version"
+  ],
+  "properties": {
+    "memory_id": {
+      "type": "string",
+      "description": "Stable unique identifier for the memory record.",
+      "pattern": "^[a-zA-Z0-9._:-]{6,128}$"
+    },
+    "tenant": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "project": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "repository": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "scope": {
+      "type": "string",
+      "enum": ["user", "repo", "project", "team", "org"]
+    },
+    "visibility": {
+      "type": "string",
+      "enum": ["private", "team", "org"]
+    },
+    "type": {
+      "type": "string",
+      "enum": ["decision", "bugfix", "incident", "note", "todo", "question", "fact", "convention", "summary"]
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1000
+    },
+    "details": {
+      "type": "string",
+      "maxLength": 20000
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 64
+      },
+      "maxItems": 50,
+      "uniqueItems": true
+    },
+    "author": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "source": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "status": {
+      "type": "string",
+      "enum": ["active", "redacted", "archived", "deleted"]
+    },
+    "source_ref": {
+      "type": "string",
+      "maxLength": 512
+    },
+    "checksum": {
+      "type": "string",
+      "maxLength": 128
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "schema_version": {
+      "type": "string",
+      "pattern": "^v[0-9]+(\\.[0-9]+)?$"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Extensible metadata for adapters and deployment-specific annotations.",
+      "additionalProperties": {
+        "type": ["string", "number", "boolean", "null"]
+      }
+    }
+  }
+}

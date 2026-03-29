@@ -1,0 +1,5 @@
+mcp<2,>=1
+
+[dev]
+jsonschema>=4.0.0
+pytest>=8.0.0

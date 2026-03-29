@@ -1,0 +1,332 @@
+Metadata-Version: 2.4
+Name: agent-memory-fabric
+Version: 0.1.0a0
+Summary: A vendor-neutral memory layer for coding agents and enterprise AI workflows.
+Author: Agent Memory Fabric Contributors
+License: Apache License
+        Version 2.0, January 2004
+        http://www.apache.org/licenses/
+        
+        TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+        
+        1. Definitions.
+        
+        "License" shall mean the terms and conditions for use, reproduction, and
+        distribution as defined by Sections 1 through 9 of this document.
+        
+        "Licensor" shall mean the copyright owner or entity authorized by the
+        copyright owner that is granting the License.
+        
+        "Legal Entity" shall mean the union of the acting entity and all other
+        entities that control, are controlled by, or are under common control with
+        that entity. For the purposes of this definition, "control" means (i) the
+        power, direct or indirect, to cause the direction or management of such
+        entity, whether by contract or otherwise, or (ii) ownership of fifty percent
+        (50%) or more of the outstanding shares, or (iii) beneficial ownership of
+        such entity.
+        
+        "You" (or "Your") shall mean an individual or Legal Entity exercising
+        permissions granted by this License.
+        
+        "Source" form shall mean the preferred form for making modifications,
+        including but not limited to software source code, documentation source,
+        and configuration files.
+        
+        "Object" form shall mean any form resulting from mechanical transformation
+        or translation of a Source form, including but not limited to compiled object
+        code, generated documentation, and conversions to other media types.
+        
+        "Work" shall mean the work of authorship, whether in Source or Object form,
+        made available under the License, as indicated by a copyright notice that is
+        included in or attached to the work.
+        
+        "Derivative Works" shall mean any work, whether in Source or Object form,
+        that is based on (or derived from) the Work and for which the editorial
+        revisions, annotations, elaborations, or other modifications represent, as a
+        whole, an original work of authorship. For the purposes of this License,
+        Derivative Works shall not include works that remain separable from, or merely
+        link (or bind by name) to the interfaces of, the Work and Derivative Works
+        thereof.
+        
+        "Contribution" shall mean any work of authorship, including the original
+        version of the Work and any modifications or additions to that Work or
+        Derivative Works thereof, that is intentionally submitted to Licensor for
+        inclusion in the Work by the copyright owner or by an individual or Legal
+        Entity authorized to submit on behalf of the copyright owner. For the purposes
+        of this definition, "submitted" means any form of electronic, verbal, or
+        written communication sent to the Licensor or its representatives, including
+        but not limited to communication on electronic mailing lists, source code
+        control systems, and issue tracking systems that are managed by, or on behalf
+        of, the Licensor for the purpose of discussing and improving the Work, but
+        excluding communication that is conspicuously marked or otherwise designated
+        in writing by the copyright owner as "Not a Contribution."
+        
+        "Contributor" shall mean Licensor and any individual or Legal Entity on behalf
+        of whom a Contribution has been received by Licensor and subsequently
+        incorporated within the Work.
+        
+        2. Grant of Copyright License. Subject to the terms and conditions of this
+        License, each Contributor hereby grants to You a perpetual, worldwide,
+        non-exclusive, no-charge, royalty-free, irrevocable copyright license to
+        reproduce, prepare Derivative Works of, publicly display, publicly perform,
+        sublicense, and distribute the Work and such Derivative Works in Source or
+        Object form.
+        
+        3. Grant of Patent License. Subject to the terms and conditions of this
+        License, each Contributor hereby grants to You a perpetual, worldwide,
+        non-exclusive, no-charge, royalty-free, irrevocable (except as stated in this
+        section) patent license to make, have made, use, offer to sell, sell, import,
+        and otherwise transfer the Work, where such license applies only to those
+        patent claims licensable by such Contributor that are necessarily infringed by
+        their Contribution(s) alone or by combination of their Contribution(s) with
+        the Work to which such Contribution(s) was submitted. If You institute patent
+        litigation against any entity (including a cross-claim or counterclaim in a
+        lawsuit) alleging that the Work or a Contribution incorporated within the Work
+        constitutes direct or contributory patent infringement, then any patent
+        licenses granted to You under this License for that Work shall terminate as of
+        the date such litigation is filed.
+        
+        4. Redistribution. You may reproduce and distribute copies of the Work or
+        Derivative Works thereof in any medium, with or without modifications, and in
+        Source or Object form, provided that You meet the following conditions:
+        
+        (a) You must give any other recipients of the Work or Derivative Works a copy
+        of this License; and
+        
+        (b) You must cause any modified files to carry prominent notices stating that
+        You changed the files; and
+        
+        (c) You must retain, in the Source form of any Derivative Works that You
+        distribute, all copyright, patent, trademark, and attribution notices from
+        the Source form of the Work, excluding those notices that do not pertain to
+        any part of the Derivative Works; and
+        
+        (d) If the Work includes a "NOTICE" text file as part of its distribution,
+        then any Derivative Works that You distribute must include a readable copy of
+        the attribution notices contained within such NOTICE file, excluding those
+        notices that do not pertain to any part of the Derivative Works, in at least
+        one of the following places: within a NOTICE text file distributed as part of
+        the Derivative Works; within the Source form or documentation, if provided
+        along with the Derivative Works; or, within a display generated by the
+        Derivative Works, if and wherever such third-party notices normally appear.
+        The contents of the NOTICE file are for informational purposes only and do not
+        modify the License. You may add Your own attribution notices within Derivative
+        Works that You distribute, alongside or as an addendum to the NOTICE text from
+        the Work, provided that such additional attribution notices cannot be
+        construed as modifying the License.
+        
+        You may add Your own copyright statement to Your modifications and may provide
+        additional or different license terms and conditions for use, reproduction, or
+        distribution of Your modifications, or for any such Derivative Works as a
+        whole, provided Your use, reproduction, and distribution of the Work otherwise
+        complies with the conditions stated in this License.
+        
+        5. Submission of Contributions. Unless You explicitly state otherwise, any
+        Contribution intentionally submitted for inclusion in the Work by You to the
+        Licensor shall be under the terms and conditions of this License, without any
+        additional terms or conditions. Notwithstanding the above, nothing herein
+        shall supersede or modify the terms of any separate license agreement you may
+        have executed with Licensor regarding such Contributions.
+        
+        6. Trademarks. This License does not grant permission to use the trade names,
+        trademarks, service marks, or product names of the Licensor, except as
+        required for reasonable and customary use in describing the origin of the Work
+        and reproducing the content of the NOTICE file.
+        
+        7. Disclaimer of Warranty. Unless required by applicable law or agreed to in
+        writing, Licensor provides the Work (and each Contributor provides its
+        Contributions) on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+        KIND, either express or implied, including, without limitation, any warranties
+        or conditions of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+        PARTICULAR PURPOSE. You are solely responsible for determining the
+        appropriateness of using or redistributing the Work and assume any risks
+        associated with Your exercise of permissions under this License.
+        
+        8. Limitation of Liability. In no event and under no legal theory, whether in
+        tor t (including negligence), contract, or otherwise, unless required by
+        applicable law (such as deliberate and grossly negligent acts) or agreed to in
+        writing, shall any Contributor be liable to You for damages, including any
+        direct, indirect, special, incidental, or consequential damages of any
+        character arising as a result of this License or out of the use or inability
+        to use the Work (including but not limited to damages for loss of goodwill,
+        work stoppage, computer failure or malfunction, or any and all other
+        commercial damages or losses), even if such Contributor has been advised of
+        the possibility of such damages.
+        
+        9. Accepting Warranty or Additional Liability. While redistributing the Work
+        or Derivative Works thereof, You may choose to offer, and charge a fee for,
+        acceptance of support, warranty, indemnity, or other liability obligations
+        and/or rights consistent with this License. However, in accepting such
+        obligations, You may act only on Your own behalf and on Your sole
+        responsibility, not on behalf of any other Contributor, and only if You agree
+        to indemnify, defend, and hold each Contributor harmless for any liability
+        incurred by, or claims asserted against, such Contributor by reason of your
+        accepting any such warranty or additional liability.
+        
+        END OF TERMS AND CONDITIONS
+        
+Keywords: agents,mcp,memory,ai,governance
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Software Development :: Libraries
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: mcp<2,>=1
+Provides-Extra: dev
+Requires-Dist: jsonschema>=4.0.0; extra == "dev"
+Requires-Dist: pytest>=8.0.0; extra == "dev"
+Dynamic: license-file
+
+# Agent Memory Fabric
+
+> One memory layer for every agent.
+
+Agent Memory Fabric is a vendor-neutral memory layer for coding agents and enterprise AI workflows.
+It helps teams persist, search, govern, and reuse memory across sessions, repositories, and agent tools
+without binding the core system to one model vendor, one IDE, or one runtime.
+
+## Positioning
+
+Agent Memory Fabric is designed around four principles:
+
+1. Protocol first
+   The primary integration surface is MCP so multiple agent platforms can use the same memory system.
+2. Vendor neutrality
+   The core does not depend on one model provider, one embedding provider, or one client tool.
+3. Governance by design
+   Auditability, scope isolation, redaction, retention, and policy controls are first-class concerns.
+4. Open core, enterprise extension
+   The open source core focuses on protocols, interfaces, runtime, and governance. Enterprise-specific
+   customization can extend the system without forking the model.
+
+## What This Project Is
+
+- A memory runtime for agent workflows
+- An MCP server for read and write memory operations
+- A schema and policy layer for memory scope, retention, and visibility
+- A reference architecture for cross-platform agent memory
+- A foundation for repository-level and team-level memory search across sessions
+
+## What This Project Is Not
+
+- A plugin locked to one vendor or one coding tool
+- A closed SaaS backend
+- A system that stores raw secrets or unrestricted chat transcripts by default
+- A replacement for source control, issue trackers, or document stores
+
+## Architecture
+
+The project is split into four main layers:
+
+1. `core/`
+   The memory domain model, indexing pipeline, retrieval logic, retention rules, and policy evaluation.
+2. `mcp-server/`
+   The canonical protocol surface that exposes memory operations to agent tools.
+3. `adapters/`
+   Client integrations for different agent platforms and hosting environments.
+4. `policies/` and `schemas/`
+   Shared contracts for visibility, tenancy, data typing, redaction, and tool permissions.
+
+## Repository Structure
+
+```text
+agent-memory-fabric/
+├── README.md
+├── SECURITY.md
+├── AGENTS.md
+├── core/
+├── mcp-server/
+├── adapters/
+├── sdk/
+├── schemas/
+├── policies/
+├── deploy/
+├── examples/
+├── docs/
+└── .github/workflows/
+```
+
+See [docs/repository-structure.md](/home/sanding/workspace/openProject/agent-memory-fabric/docs/repository-structure.md)
+for the intended responsibilities of each directory.
+
+## Additional Docs
+
+- Architecture: [docs/architecture.md](/home/sanding/workspace/openProject/agent-memory-fabric/docs/architecture.md)
+- Threat model: [docs/threat-model.md](/home/sanding/workspace/openProject/agent-memory-fabric/docs/threat-model.md)
+- Tech stack: [docs/tech-stack.md](/home/sanding/workspace/openProject/agent-memory-fabric/docs/tech-stack.md)
+- Contributing: [CONTRIBUTING.md](/home/sanding/workspace/openProject/agent-memory-fabric/CONTRIBUTING.md)
+- Code of conduct: [CODE_OF_CONDUCT.md](/home/sanding/workspace/openProject/agent-memory-fabric/CODE_OF_CONDUCT.md)
+
+## MCP Surface
+
+The initial MCP tool surface is intentionally small and auditable:
+
+- `search_memory`
+- `write_memory`
+- `get_recent_project_context`
+- `get_decisions`
+- `get_open_questions`
+- `upsert_fact`
+- `list_memories_by_repo`
+- `redact_memory`
+
+See [docs/mcp-tools.md](/home/sanding/workspace/openProject/agent-memory-fabric/docs/mcp-tools.md)
+for the v0.1 design draft.
+
+## Planning
+
+The project now includes both a multi-phase roadmap and an explicit model handoff document so work can
+continue smoothly across sessions, contributors, and agent tools.
+
+- Overall roadmap: [docs/roadmap.md](/home/sanding/workspace/openProject/agent-memory-fabric/docs/roadmap.md)
+- Model handoff: [docs/model-handoff.md](/home/sanding/workspace/openProject/agent-memory-fabric/docs/model-handoff.md)
+- Strategy notes in Chinese: [docs/strategy-notes.zh-CN.md](/home/sanding/workspace/openProject/agent-memory-fabric/docs/strategy-notes.zh-CN.md)
+
+## Security and Compliance
+
+This project treats memory as sensitive operational data.
+The default design assumes:
+
+- no raw secret storage
+- scoped read and write permissions
+- auditable writes
+- retention and deletion controls
+- tenant, project, repository, and user boundaries
+
+See [SECURITY.md](/home/sanding/workspace/openProject/agent-memory-fabric/SECURITY.md)
+for the initial security model and disclosure guidance.
+
+## v0.1 Scope
+
+The first milestone targets a small but complete vertical slice:
+
+- memory domain model
+- reference MCP server
+- SQLite and PostgreSQL storage adapters
+- basic retrieval and structured write flow
+- repository and project scoped memory
+- session summary persistence
+- local deployment example
+
+See [docs/v0.1-milestone.md](/home/sanding/workspace/openProject/agent-memory-fabric/docs/v0.1-milestone.md)
+for the milestone checklist.
+
+## Python Skeleton
+
+The repository now includes an initial Python package layout under `src/agent_memory_fabric/`, a
+`pyproject.toml`, a SQLite-backed reference store, and a minimal stdio server skeleton for the first tools.
+
+See [examples/python-quickstart.md](/home/sanding/workspace/openProject/agent-memory-fabric/examples/python-quickstart.md)
+for the current local development flow.
+
+## Why This Exists
+
+Modern agent tools can reason well within a single session, but teams still lose valuable knowledge between
+sessions, across repositories, and across tools. Agent Memory Fabric aims to provide one shared memory layer
+that remains portable, inspectable, and governable.
