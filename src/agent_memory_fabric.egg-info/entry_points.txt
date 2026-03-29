@@ -1,2 +1,0 @@
-[console_scripts]
-amf-mcp-server = agent_memory_fabric.mcp_server:main
