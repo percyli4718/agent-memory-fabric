@@ -48,6 +48,14 @@ def build_mcp(db_path: str) -> FastMCP:
     def redact_memory(payload: dict[str, Any]) -> dict[str, Any]:
         return handlers.redact_memory(payload)
 
+    @mcp.tool(description="Create or update a durable fact within an explicit scope.")
+    def upsert_fact(payload: dict[str, Any]) -> dict[str, Any]:
+        return handlers.upsert_fact(payload)
+
+    @mcp.tool(description="List recent memory records for a repository within explicit scopes.")
+    def list_memories_by_repo(payload: dict[str, Any]) -> dict[str, Any]:
+        return handlers.list_memories_by_repo(payload)
+
     return mcp
 
 

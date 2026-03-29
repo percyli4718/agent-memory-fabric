@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-memory-fabric.dev/schemas/upsert-fact.request.schema.json",
+  "title": "UpsertFactRequest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "tenant",
+    "project",
+    "repository",
+    "scope",
+    "visibility",
+    "fact_key",
+    "fact_value",
+    "author",
+    "source"
+  ],
+  "properties": {
+    "tenant": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "project": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "repository": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "scope": { "type": "string", "enum": ["user", "repo", "project", "team", "org"] },
+    "visibility": { "type": "string", "enum": ["private", "team", "org"] },
+    "fact_key": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "fact_value": { "type": "string", "minLength": 1, "maxLength": 2000 },
+    "summary": { "type": "string", "maxLength": 1000 },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1, "maxLength": 64 },
+      "maxItems": 50,
+      "uniqueItems": true
+    },
+    "author": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "source": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "source_ref": { "type": "string", "maxLength": 512 },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": { "type": ["string", "number", "boolean", "null"] }
+    }
+  }
+}

@@ -41,3 +41,13 @@ class ToolHandlers:
         _ = load_schema("redact-memory.request.schema.json")
         record = self.store.redact_memory(payload)
         return {"memory": record.to_dict()}
+
+    def upsert_fact(self, payload: dict[str, Any]) -> dict[str, Any]:
+        _ = load_schema("upsert-fact.request.schema.json")
+        record = self.store.upsert_fact(payload)
+        return {"memory": record.to_dict()}
+
+    def list_memories_by_repo(self, payload: dict[str, Any]) -> dict[str, Any]:
+        _ = load_schema("list-memories-by-repo.request.schema.json")
+        results = [record.to_dict() for record in self.store.list_memories_by_repo(payload)]
+        return {"results": results, "count": len(results)}

@@ -239,6 +239,140 @@ class SQLiteMemoryStore(MemoryStore):
             ).fetchone()
         return self._row_to_record(updated)
 
+    def upsert_fact(self, payload: dict) -> MemoryRecord:
+        validate_payload("upsert-fact.request.schema.json", payload)
+        enforce_write_policy(payload)
+        summary = payload.get("summary") or f"Fact: {payload['fact_key']}"
+        details = payload["fact_value"]
+        metadata = {
+            **dict(payload.get("metadata") or {}),
+            "fact_key": payload["fact_key"],
+            "fact_value": payload["fact_value"],
+        }
+
+        with self._connect() as conn:
+            row = conn.execute(
+                """
+                SELECT * FROM memory_records
+                WHERE tenant = ?
+                  AND project = ?
+                  AND repository = ?
+                  AND scope = ?
+                  AND type = 'fact'
+                """,
+                (
+                    payload["tenant"],
+                    payload["project"],
+                    payload["repository"],
+                    payload["scope"],
+                ),
+            ).fetchall()
+
+            existing = None
+            for candidate in row:
+                candidate_metadata = json.loads(candidate["metadata_json"])
+                if candidate_metadata.get("fact_key") == payload["fact_key"]:
+                    existing = candidate
+                    break
+
+            if existing is None:
+                record = MemoryRecord.create(
+                    tenant=payload["tenant"],
+                    project=payload["project"],
+                    repository=payload["repository"],
+                    scope=payload["scope"],
+                    visibility=payload["visibility"],
+                    type="fact",
+                    summary=summary,
+                    author=payload["author"],
+                    source=payload["source"],
+                    details=details,
+                    tags=list(payload.get("tags") or []),
+                    source_ref=payload.get("source_ref"),
+                    metadata=metadata,
+                )
+                conn.execute(
+                    """
+                    INSERT INTO memory_records (
+                        memory_id, tenant, project, repository, scope, visibility, type,
+                        summary, details, tags_json, author, source, status, source_ref,
+                        checksum, created_at, updated_at, expires_at, schema_version, metadata_json
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        record.memory_id,
+                        record.tenant,
+                        record.project,
+                        record.repository,
+                        record.scope.value,
+                        record.visibility.value,
+                        record.type.value,
+                        record.summary,
+                        record.details,
+                        json.dumps(record.tags),
+                        record.author,
+                        record.source,
+                        record.status.value,
+                        record.source_ref,
+                        record.checksum,
+                        record.created_at,
+                        record.updated_at,
+                        record.expires_at,
+                        record.schema_version,
+                        json.dumps(record.metadata),
+                    ),
+                )
+                self._append_audit_log(
+                    conn,
+                    event_type="fact_upserted",
+                    memory_id=record.memory_id,
+                    actor=record.author,
+                    reason=payload["fact_key"],
+                )
+                return record
+
+            conn.execute(
+                """
+                UPDATE memory_records
+                SET visibility = ?, summary = ?, details = ?, tags_json = ?, author = ?,
+                    source = ?, source_ref = ?, updated_at = ?, metadata_json = ?
+                WHERE memory_id = ?
+                """,
+                (
+                    payload["visibility"],
+                    summary,
+                    details,
+                    json.dumps(list(payload.get("tags") or [])),
+                    payload["author"],
+                    payload["source"],
+                    payload.get("source_ref"),
+                    utc_now(),
+                    json.dumps(metadata),
+                    existing["memory_id"],
+                ),
+            )
+            self._append_audit_log(
+                conn,
+                event_type="fact_upserted",
+                memory_id=existing["memory_id"],
+                actor=payload["author"],
+                reason=payload["fact_key"],
+            )
+            updated = conn.execute(
+                "SELECT * FROM memory_records WHERE memory_id = ?",
+                (existing["memory_id"],),
+            ).fetchone()
+        return self._row_to_record(updated)
+
+    def list_memories_by_repo(self, payload: dict) -> list[MemoryRecord]:
+        validate_payload("list-memories-by-repo.request.schema.json", payload)
+        enforce_search_policy(payload)
+        return self._list_filtered_records(
+            payload,
+            types=payload.get("types"),
+            limit=payload.get("limit", 10),
+        )
+
     def _list_filtered_records(
         self,
         payload: dict,

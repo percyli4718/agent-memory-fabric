@@ -230,3 +230,93 @@ def test_tool_handlers_expose_mcp_facing_results(tmp_path: Path) -> None:
         }
     )
     assert redacted["memory"]["status"] == "redacted"
+
+
+def test_upsert_fact_creates_and_updates_single_fact_record(tmp_path: Path) -> None:
+    db_path = tmp_path / "amf.db"
+    store = SQLiteMemoryStore(str(db_path))
+
+    first = store.upsert_fact(
+        {
+            "tenant": "default",
+            "project": "amf",
+            "repository": "agent-memory-fabric",
+            "scope": "repo",
+            "visibility": "team",
+            "fact_key": "service_owner",
+            "fact_value": "platform-team",
+            "author": "test-suite",
+            "source": "unit-test",
+        }
+    )
+    second = store.upsert_fact(
+        {
+            "tenant": "default",
+            "project": "amf",
+            "repository": "agent-memory-fabric",
+            "scope": "repo",
+            "visibility": "team",
+            "fact_key": "service_owner",
+            "fact_value": "core-platform",
+            "author": "test-suite",
+            "source": "unit-test",
+        }
+    )
+
+    assert first.memory_id == second.memory_id
+    assert second.metadata["fact_value"] == "core-platform"
+    assert second.type.value == "fact"
+
+
+def test_list_memories_by_repo_returns_filtered_records(tmp_path: Path) -> None:
+    db_path = tmp_path / "amf.db"
+    store = SQLiteMemoryStore(str(db_path))
+    store.write_memory(sample_write_payload(type="note", summary="Repo note"))
+    store.write_memory(sample_write_payload(type="decision", summary="Repo decision"))
+
+    results = store.list_memories_by_repo(
+        {
+            "tenant": "default",
+            "project": "amf",
+            "repository": "agent-memory-fabric",
+            "scope": ["repo"],
+            "types": ["decision"],
+            "limit": 10,
+        }
+    )
+
+    assert len(results) == 1
+    assert results[0].summary == "Repo decision"
+
+
+def test_handler_supports_upsert_fact_and_list_by_repo(tmp_path: Path) -> None:
+    db_path = tmp_path / "amf.db"
+    handlers = ToolHandlers(SQLiteMemoryStore(str(db_path)))
+
+    fact = handlers.upsert_fact(
+        {
+            "tenant": "default",
+            "project": "amf",
+            "repository": "agent-memory-fabric",
+            "scope": "repo",
+            "visibility": "team",
+            "fact_key": "runbook",
+            "fact_value": "/data/runbooks/amf.md",
+            "author": "handler-test",
+            "source": "unit-test",
+        }
+    )
+    assert fact["memory"]["type"] == "fact"
+
+    listed = handlers.list_memories_by_repo(
+        {
+            "tenant": "default",
+            "project": "amf",
+            "repository": "agent-memory-fabric",
+            "scope": ["repo"],
+            "types": ["fact"],
+            "limit": 10,
+        }
+    )
+    assert listed["count"] == 1
+    assert listed["results"][0]["metadata"]["fact_key"] == "runbook"

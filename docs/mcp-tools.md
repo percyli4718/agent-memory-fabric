@@ -99,10 +99,16 @@ This currently returns `question` and `todo` records within explicitly bounded s
 Purpose:
 Create or update durable facts such as service ownership, deployment locations, or operational conventions.
 
+v0.1 note:
+The current implementation upserts a `fact` record by `tenant + project + repository + scope + fact_key`.
+
 ### `list_memories_by_repo`
 
 Purpose:
 List recent or filtered memory records for a repository without semantic search.
+
+v0.1 note:
+The current implementation supports explicit scopes plus optional type filters and recent-first ordering.
 
 ### `redact_memory`
 

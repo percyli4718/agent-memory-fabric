@@ -34,3 +34,10 @@ htmlcov/
 # Local data
 tmp/
 .cache/
+
+# Local machine-specific automation
+scripts/local/
+docs/v2rayn-automation.zh-CN.md
+docs/v2rayn-github-ssh-bypass-plan.zh-CN.md
+docs/v2rayn-recovery-playbook.zh-CN.md
+.local-ops/

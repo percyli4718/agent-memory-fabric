@@ -29,3 +29,11 @@ class MemoryStore(ABC):
     @abstractmethod
     def redact_memory(self, payload: dict) -> MemoryRecord:
         raise NotImplementedError
+
+    @abstractmethod
+    def upsert_fact(self, payload: dict) -> MemoryRecord:
+        raise NotImplementedError
+
+    @abstractmethod
+    def list_memories_by_repo(self, payload: dict) -> list[MemoryRecord]:
+        raise NotImplementedError
