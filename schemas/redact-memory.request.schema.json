@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-memory-fabric.dev/schemas/redact-memory.request.schema.json",
+  "title": "RedactMemoryRequest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["memory_id", "redacted_by", "reason"],
+  "properties": {
+    "memory_id": {
+      "type": "string",
+      "minLength": 6,
+      "maxLength": 128
+    },
+    "redacted_by": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1000
+    }
+  }
+}

@@ -4,7 +4,7 @@ import json
 import sqlite3
 from pathlib import Path
 
-from agent_memory_fabric.models import MemoryRecord
+from agent_memory_fabric.models import MemoryRecord, utc_now
 from agent_memory_fabric.policy import (
     allowed_visibility_for_scopes,
     enforce_search_policy,
@@ -56,6 +56,18 @@ class SQLiteMemoryStore(MemoryStore):
                 )
                 """
             )
+            conn.execute(
+                """
+                CREATE TABLE IF NOT EXISTS audit_log (
+                    audit_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    event_type TEXT NOT NULL,
+                    memory_id TEXT,
+                    actor TEXT NOT NULL,
+                    reason TEXT,
+                    created_at TEXT NOT NULL
+                )
+                """
+            )
 
     def write_memory(self, payload: dict) -> MemoryRecord:
         validate_payload("write-memory.request.schema.json", payload)
@@ -92,6 +104,13 @@ class SQLiteMemoryStore(MemoryStore):
                     record.schema_version,
                     json.dumps(record.metadata),
                 ),
+            )
+            self._append_audit_log(
+                conn,
+                event_type="memory_written",
+                memory_id=record.memory_id,
+                actor=record.author,
+                reason=record.source,
             )
         return record
 
@@ -170,6 +189,56 @@ class SQLiteMemoryStore(MemoryStore):
             limit=payload.get("limit", 10),
         )
 
+    def redact_memory(self, payload: dict) -> MemoryRecord:
+        validate_payload("redact-memory.request.schema.json", payload)
+        with self._connect() as conn:
+            row = conn.execute(
+                """
+                SELECT * FROM memory_records
+                WHERE memory_id = ?
+                """,
+                (payload["memory_id"],),
+            ).fetchone()
+            if row is None:
+                raise ValueError(f"Memory not found: {payload['memory_id']}")
+
+            conn.execute(
+                """
+                UPDATE memory_records
+                SET details = ?, tags_json = ?, status = ?, updated_at = ?, metadata_json = ?
+                WHERE memory_id = ?
+                """,
+                (
+                    "[REDACTED]",
+                    json.dumps([]),
+                    "redacted",
+                    utc_now(),
+                    json.dumps(
+                        {
+                            **json.loads(row["metadata_json"]),
+                            "redaction_reason": payload["reason"],
+                            "redacted_by": payload["redacted_by"],
+                        }
+                    ),
+                    payload["memory_id"],
+                ),
+            )
+            self._append_audit_log(
+                conn,
+                event_type="memory_redacted",
+                memory_id=payload["memory_id"],
+                actor=payload["redacted_by"],
+                reason=payload["reason"],
+            )
+            updated = conn.execute(
+                """
+                SELECT * FROM memory_records
+                WHERE memory_id = ?
+                """,
+                (payload["memory_id"],),
+            ).fetchone()
+        return self._row_to_record(updated)
+
     def _list_filtered_records(
         self,
         payload: dict,
@@ -239,3 +308,39 @@ class SQLiteMemoryStore(MemoryStore):
                 "metadata": json.loads(row["metadata_json"]),
             }
         )
+
+    def _append_audit_log(
+        self,
+        conn: sqlite3.Connection,
+        *,
+        event_type: str,
+        memory_id: str | None,
+        actor: str,
+        reason: str | None,
+    ) -> None:
+        from datetime import datetime, timezone
+
+        conn.execute(
+            """
+            INSERT INTO audit_log (event_type, memory_id, actor, reason, created_at)
+            VALUES (?, ?, ?, ?, ?)
+            """,
+            (
+                event_type,
+                memory_id,
+                actor,
+                reason,
+                datetime.now(timezone.utc).isoformat(),
+            ),
+        )
+
+    def list_audit_events(self) -> list[dict]:
+        with self._connect() as conn:
+            rows = conn.execute(
+                """
+                SELECT audit_id, event_type, memory_id, actor, reason, created_at
+                FROM audit_log
+                ORDER BY audit_id ASC
+                """
+            ).fetchall()
+        return [dict(row) for row in rows]

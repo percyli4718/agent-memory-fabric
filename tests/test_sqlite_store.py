@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from agent_memory_fabric.handlers import ToolHandlers
 from agent_memory_fabric.storage.sqlite import SQLiteMemoryStore
 
 
@@ -59,7 +60,7 @@ def test_rejects_missing_required_fields(tmp_path: Path) -> None:
     try:
         store.write_memory({"tenant": "default"})
     except ValueError as exc:
-        assert "Missing required fields" in str(exc)
+        assert "Schema validation failed" in str(exc)
     else:
         raise AssertionError("Expected validation error")
 
@@ -170,3 +171,62 @@ def test_get_open_questions_filters_question_and_todo_records(tmp_path: Path) ->
 
     assert len(results) == 2
     assert {record.type.value for record in results} == {"question", "todo"}
+
+
+def test_redact_memory_updates_record_and_appends_audit_event(tmp_path: Path) -> None:
+    db_path = tmp_path / "amf.db"
+    store = SQLiteMemoryStore(str(db_path))
+
+    record = store.write_memory(
+        sample_write_payload(
+            type="note",
+            summary="Sensitive note",
+            details="Contains material that should be redacted.",
+        )
+    )
+
+    redacted = store.redact_memory(
+        {
+            "memory_id": record.memory_id,
+            "redacted_by": "security-review",
+            "reason": "Contains sensitive data",
+        }
+    )
+
+    assert redacted.status.value == "redacted"
+    assert redacted.details == "[REDACTED]"
+    assert redacted.metadata["redacted_by"] == "security-review"
+
+    events = store.list_audit_events()
+    assert len(events) == 2
+    assert events[-1]["event_type"] == "memory_redacted"
+
+
+def test_tool_handlers_expose_mcp_facing_results(tmp_path: Path) -> None:
+    db_path = tmp_path / "amf.db"
+    store = SQLiteMemoryStore(str(db_path))
+    handlers = ToolHandlers(store)
+
+    created = handlers.write_memory(sample_write_payload(summary="Handler write"))
+    assert created["memory"]["summary"] == "Handler write"
+
+    search = handlers.search_memory(
+        {
+            "query": "Handler",
+            "tenant": "default",
+            "project": "amf",
+            "repository": "agent-memory-fabric",
+            "scope": ["repo"],
+            "limit": 10,
+        }
+    )
+    assert search["count"] == 1
+
+    redacted = handlers.redact_memory(
+        {
+            "memory_id": created["memory"]["memory_id"],
+            "redacted_by": "handler-test",
+            "reason": "test",
+        }
+    )
+    assert redacted["memory"]["status"] == "redacted"

@@ -109,6 +109,10 @@ List recent or filtered memory records for a repository without semantic search.
 Purpose:
 Redact sensitive content while preserving audit metadata and the record lifecycle.
 
+v0.1 note:
+The current implementation redacts `details`, clears tags, marks the record as `redacted`, and appends an
+audit event.
+
 ## Deliberately Excluded From v0.1
 
 - raw transcript ingestion
@@ -125,3 +129,5 @@ Redact sensitive content while preserving audit metadata and the record lifecycl
 - `project` scope supports only `team` visibility
 - retrieval requires an explicit scope list
 - retrieval currently rejects `team` and `org` scopes until a stronger auth model exists
+- mutation paths are schema-validated with `jsonschema`
+- redaction is auditable and preserves the record lifecycle instead of hard-deleting

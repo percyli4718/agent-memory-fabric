@@ -25,3 +25,7 @@ class MemoryStore(ABC):
     @abstractmethod
     def get_open_questions(self, payload: dict) -> list[MemoryRecord]:
         raise NotImplementedError
+
+    @abstractmethod
+    def redact_memory(self, payload: dict) -> MemoryRecord:
+        raise NotImplementedError
