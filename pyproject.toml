@@ -32,6 +32,9 @@ dev = [
   "jsonschema>=4.0.0",
   "pytest>=8.0.0"
 ]
+postgres = [
+  "asyncpg>=0.29.0"
+]
 
 [project.scripts]
 amf-mcp-server = "agent_memory_fabric.mcp_server:main"
