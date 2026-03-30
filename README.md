@@ -67,16 +67,16 @@ agent-memory-fabric/
 └── .github/workflows/
 ```
 
-See [docs/repository-structure.md](/home/sanding/workspace/openProject/agent-memory-fabric/docs/repository-structure.md)
+See [docs/repository-structure.md](docs/repository-structure.md)
 for the intended responsibilities of each directory.
 
 ## Additional Docs
 
-- Architecture: [docs/architecture.md](/home/sanding/workspace/openProject/agent-memory-fabric/docs/architecture.md)
-- Threat model: [docs/threat-model.md](/home/sanding/workspace/openProject/agent-memory-fabric/docs/threat-model.md)
-- Tech stack: [docs/tech-stack.md](/home/sanding/workspace/openProject/agent-memory-fabric/docs/tech-stack.md)
-- Contributing: [CONTRIBUTING.md](/home/sanding/workspace/openProject/agent-memory-fabric/CONTRIBUTING.md)
-- Code of conduct: [CODE_OF_CONDUCT.md](/home/sanding/workspace/openProject/agent-memory-fabric/CODE_OF_CONDUCT.md)
+- Architecture: [docs/architecture.md](docs/architecture.md)
+- Threat model: [docs/threat-model.md](docs/threat-model.md)
+- Tech stack: [docs/tech-stack.md](docs/tech-stack.md)
+- Contributing: [CONTRIBUTING.md](CONTRIBUTING.md)
+- Code of conduct: [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
 
 ## MCP Surface
 
@@ -91,17 +91,40 @@ The initial MCP tool surface is intentionally small and auditable:
 - `list_memories_by_repo`
 - `redact_memory`
 
-See [docs/mcp-tools.md](/home/sanding/workspace/openProject/agent-memory-fabric/docs/mcp-tools.md)
-for the v0.1 design draft.
+See [docs/mcp-tools.md](docs/mcp-tools.md) for the v0.1 design.
+
+## Quick Start
+
+```bash
+# Install
+pip install -e ".[dev]"
+
+# Run MCP server
+amf-mcp-server --db-path ~/.amf/memory.db
+
+# Run verification
+python examples/v0.1-verification.py
+```
+
+## Client Integration
+
+Configure Agent Memory Fabric in your preferred agent platform:
+
+- **Claude Code**: Add to `~/.claude/settings.json`
+- **Codex (VS Code)**: Add to `.vscode/mcp.json`
+- **Gemini CLI**: Add to `~/.gemini/mcp_config.json`
+- **Cursor**: Settings → Features → MCP
+
+See [docs/mcp-client-integration.md](docs/mcp-client-integration.md) for detailed setup instructions.
 
 ## Planning
 
 The project now includes both a multi-phase roadmap and an explicit model handoff document so work can
 continue smoothly across sessions, contributors, and agent tools.
 
-- Overall roadmap: [docs/roadmap.md](/home/sanding/workspace/openProject/agent-memory-fabric/docs/roadmap.md)
-- Model handoff: [docs/model-handoff.md](/home/sanding/workspace/openProject/agent-memory-fabric/docs/model-handoff.md)
-- Strategy notes in Chinese: [docs/strategy-notes.zh-CN.md](/home/sanding/workspace/openProject/agent-memory-fabric/docs/strategy-notes.zh-CN.md)
+- Overall roadmap: [docs/roadmap.md](docs/roadmap.md)
+- Model handoff: [docs/model-handoff.md](docs/model-handoff.md)
+- Strategy notes in Chinese: [docs/strategy-notes.zh-CN.md](docs/strategy-notes.zh-CN.md)
 
 ## Security and Compliance
 
@@ -114,7 +137,7 @@ The default design assumes:
 - retention and deletion controls
 - tenant, project, repository, and user boundaries
 
-See [SECURITY.md](/home/sanding/workspace/openProject/agent-memory-fabric/SECURITY.md)
+See [SECURITY.md](SECURITY.md)
 for the initial security model and disclosure guidance.
 
 ## v0.1 Scope
@@ -129,7 +152,7 @@ The first milestone targets a small but complete vertical slice:
 - session summary persistence
 - local deployment example
 
-See [docs/v0.1-milestone.md](/home/sanding/workspace/openProject/agent-memory-fabric/docs/v0.1-milestone.md)
+See [docs/v0.1-milestone.md](docs/v0.1-milestone.md)
 for the milestone checklist.
 
 ## Python Skeleton
@@ -137,7 +160,7 @@ for the milestone checklist.
 The repository now includes an initial Python package layout under `src/agent_memory_fabric/`, a
 `pyproject.toml`, a SQLite-backed reference store, and a minimal stdio server skeleton for the first tools.
 
-See [examples/python-quickstart.md](/home/sanding/workspace/openProject/agent-memory-fabric/examples/python-quickstart.md)
+See [examples/python-quickstart.md](examples/python-quickstart.md)
 for the current local development flow.
 
 ## Why This Exists
