@@ -1,0 +1,45 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -m pytest tests/test_ci_validation.py -v)",
+      "Bash(python3 -m pytest -v)",
+      "Bash(python3 -m build)",
+      "Bash(python -m py_compile src/agent_memory_fabric/storage/postgres.py)",
+      "Bash(python -m py_compile src/agent_memory_fabric/storage/__init__.py)",
+      "Bash(python3 -m py_compile src/agent_memory_fabric/storage/postgres.py)",
+      "Bash(python3 -m py_compile src/agent_memory_fabric/storage/__init__.py)",
+      "Bash(python3 -c \"from agent_memory_fabric.storage import PostgresMemoryStore, SQLiteMemoryStore, MemoryStore; print\\(''All imports successful''\\)\")",
+      "Bash(.venv/bin/python -c \"from agent_memory_fabric.storage import PostgresMemoryStore, SQLiteMemoryStore, MemoryStore; print\\(''All imports successful''\\)\")",
+      "Bash(.venv/bin/pytest tests/test_sqlite_store.py -v)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(source .venv/bin/activate)",
+      "Bash(pip install:*)",
+      "Bash(mount)",
+      "Read(//etc/**)",
+      "Read(//data/**)",
+      "Bash(blkid)",
+      "Read(//proc/8276/**)",
+      "Bash(lsblk -f)",
+      "Bash(lsblk)",
+      "Bash(fdisk -l)",
+      "Bash(sudo mount:*)",
+      "Read(//mnt/**)",
+      "Bash(sudo umount:*)",
+      "Bash(pytest tests/test_sqlite_store.py -v)",
+      "Bash(pytest tests/test_ci_validation.py -v)",
+      "Bash(git rm:*)",
+      "Bash(python -m build --no-isolation)",
+      "Bash(python -c \"from agent_memory_fabric.schema_loader import load_schema; schemas = [''search-memory.request.schema.json'', ''write-memory.request.schema.json'', ''upsert-fact.request.schema.json'', ''list-memories-by-repo.request.schema.json'', ''get-recent-project-context.request.schema.json'', ''get-decisions.request.schema.json'', ''get-open-questions.request.schema.json'', ''redact-memory.request.schema.json'']; [load_schema\\(f\\) for f in schemas]; print\\(''All schemas validated successfully''\\)\")",
+      "Bash(git checkout:*)",
+      "Bash(git merge:*)",
+      "WebFetch(domain:cli.github.com)",
+      "Bash(gh --version)",
+      "Read(//usr/lib/**)",
+      "Bash(sudo apt:*)"
+    ],
+    "additionalDirectories": [
+      "/home/sanding/workspace/openProject/agent-memory-fabric/.worktrees/v0.1-completion"
+    ]
+  }
+}
