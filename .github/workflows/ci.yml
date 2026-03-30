@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: test_amf
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: |
+        pip install -e ".[dev]"
+        pip install asyncpg
+
+    - name: Run pytest
+      run: pytest tests/ -v --tb=short
+
+    - name: Validate JSON schemas
+      run: |
+        python -c "from agent_memory_fabric.schema_loader import load_schema; [load_schema(f) for f in ['search-memory.request.schema.json', 'write-memory.request.schema.json', 'upsert-fact.request.schema.json', 'list-memories-by-repo.request.schema.json']]"
+
+    - name: Verify package builds
+      run: python -m build --no-isolation
